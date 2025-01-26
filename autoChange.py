@@ -33,6 +33,12 @@ headers = {
 while True:
     try:
         response = requests.get(API_URL, headers=headers)
+        if (response.status_code == 204):
+            my_lcd.lcd_clear()
+            my_lcd.lcd_display_string("Now Playing:", 1)
+            my_lcd.lcd_display_string("Nothing.", 2)
+            time.sleep(5)
+            continue
         current_song = response.json()["item"]["name"]
         song_duration = response.json()["item"]["duration_ms"]
         song_progress = response.json()["progress_ms"]
