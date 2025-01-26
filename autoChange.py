@@ -19,7 +19,7 @@ def display_song(song_name):
 
 parser = ArgumentParser()
 parser.add_argument('auth_token', type=str, help='The authorization token for the Spotify API')
-args = parser.add_args()
+args = parser.parse_args()
 print(f"Received auth token: {args.auth_token}")
 
 AUTH_TOKEN = args.auth_token
