@@ -12,11 +12,17 @@ def get_time_remaining(progress, duration):
     return (duration - progress) / 1000
 
 def display_song(song_name):
-    global my_lcd
-    my_lcd.lcd_clear()
-    my_lcd.lcd_display_string("Now Playing:", 1)
-    my_lcd.lcd_display_string(song_name, 2)
-
+	global my_lcd
+	my_lcd.lcd_clear()
+	my_lcd.lcd_display_string("Now Playing:", 1)
+	if (len(song_name) > 16):
+		my_lcd.lcd_display_string(song_name[:16], 2)
+		for i in range(len(song_name) - 16):
+			# scroll through longer strings
+			my_lcd.lcd_display_string(song_name[i + 1: i + 17], 2)
+			time.sleep(1)
+	else:
+		my_lcd.lcd_display_string(song_name, 2)
 parser = ArgumentParser()
 parser.add_argument('auth_token', type=str, help='The authorization token for the Spotify API')
 args = parser.parse_args()
