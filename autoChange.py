@@ -43,7 +43,10 @@ while True:
         song_duration = response.json()["item"]["duration_ms"]
         song_progress = response.json()["progress_ms"]
         display_song(current_song)
-        time.sleep(get_time_remaining(song_progress, song_duration))
+        if ((get_time_remaining(song_progress, song_duration) / 2) > 5):
+        	time.sleep(get_time_remaining(song_progress, song_duration) / 2)
+        else:
+        	time.sleep(5)
     except Exception as e:
         print(f"Error: {e}")
         my_lcd.lcd_clear()
