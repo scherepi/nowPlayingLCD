@@ -31,26 +31,28 @@ headers = {
 }
 
 while True:
-    try:
-        response = requests.get(API_URL, headers=headers)
-        if (response.status_code == 204):
-            my_lcd.lcd_clear()
-            my_lcd.lcd_display_string("Now Playing:", 1)
-            my_lcd.lcd_display_string("Nothing.", 2)
-            time.sleep(5)
-            continue
-        current_song = response.json()["item"]["name"]
-        song_duration = response.json()["item"]["duration_ms"]
-        song_progress = response.json()["progress_ms"]
-        display_song(current_song)
-        if ((get_time_remaining(song_progress, song_duration) / 2) > 5):
-        	time.sleep(get_time_remaining(song_progress, song_duration) / 2)
-        else:
-        	time.sleep(5)
-    except Exception as e:
-        print(f"Error: {e}")
-        my_lcd.lcd_clear()
-        my_lcd.lcd_display_string("Something broke.", 1)
-        exit(1)
-        
-        
+	try:
+		print("making request to api")
+		response = requests.get(API_URL, headers=headers)
+		if (response.status_code == 204):
+			print("nothing playing")
+			my_lcd.lcd_clear()
+			my_lcd.lcd_display_string("Now Playing:", 1)
+			my_lcd.lcd_display_string("Nothing.",2)
+			time.sleep(5)
+			continue
+		current_song = response.json()["item"]["name"]
+		song_duration = response.json()["item"]["duration_ms"]
+		song_progress = response.json()["progress_ms"]
+		display_song(current_song)
+		print(current_song + " is playing with " + str(get_time_remaining(song_progress, song_duration)) + " seconds remaining")
+		if ((get_time_remaining(song_progress, song_duration) / 2) > 5):
+			time.sleep(get_time_remaining(song_progress, song_duration) / 2)
+		else:
+			time.sleep(5)
+	except Exception as e:
+		print(f"Error: {e}")
+		my_lcd.lcd_clear()
+		my_lcd.lcd_display_string("Oh my.", 1)
+		my_lcd.lcd_display_string("Something broke.", 2)
+		exit(1)
