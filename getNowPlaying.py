@@ -7,10 +7,9 @@
 # *********
 # so thank you very much to Imdad Codes for making the stupid user authentication process actually possible, wish i didn't have to mess with a front-end but he made it less of a headache
 import requests
-import datetime
+from datetime import datetime
 from flask import Flask, redirect, request, jsonify, session
 import urllib.parse
-
 
 app = Flask(__name__)
 app.secret_key = "a9006eb5e08f58d87d233bf1"
@@ -25,7 +24,8 @@ API_URL = "https://api.spotify.com/v1/me/player/currently-playing"
 # TODO: put them in a single config file
 clientID = open("clientId.txt").readline()[:-1] # gotta clip the newline, once again
 clientSecret = open("clientSecret.txt").readline()[:-1] # again...
-redirect_uri = "http://localhost:3000/callback"
+HOST = "192.168.7.18"
+redirect_uri = f"http://{HOST}:3000/callback"
 
 
 # time to restructure everything to be a Flask app...
@@ -90,7 +90,8 @@ def get_playing():
 	}
 
 	response = requests.get(API_URL, headers=headers)
-	return jsonify(response.json())
+	print(response)
+	return response.json()["item"]["name"]
 
 @app.route("/refresh_token")
 def refresh_token():
@@ -113,4 +114,4 @@ def refresh_token():
 		return redirect("/currently_playing")
 	
 if __name__ == '__main__':
-	app.run(debug=True, port=3000)
+	app.run(host="192.168.7.18", debug=True, port=3000)
