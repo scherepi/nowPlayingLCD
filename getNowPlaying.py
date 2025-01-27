@@ -10,6 +10,12 @@ import requests
 from datetime import datetime
 from flask import Flask, redirect, request, jsonify, session
 import urllib.parse
+import subprocess
+import I2C_LCD_driver as driver
+
+my_lcd = driver.lcd()
+
+my_lcd.lcd_display_string("Awaiting connection", 1)
 
 app = Flask(__name__)
 app.secret_key = "a9006eb5e08f58d87d233bf1"
@@ -57,6 +63,8 @@ def callback():
 		return jsonify({"error": request.args['error']})
 	
 	if 'code' in request.args:
+		my_lcd.lcd_clear()
+		my_lcd.lcd_display_string("Connected!", 1)
 		payload = {
 			"grant_type": "authorization_code",
 			"code": request.args['code'],
@@ -85,13 +93,8 @@ def get_playing():
 	if (datetime.now().timestamp() > session['expires_at']):
 		return redirect("/refresh_token")
 	
-	headers = {
-		'Authorization': f"Bearer {session['access_token']}"
-	}
-
-	response = requests.get(API_URL, headers=headers)
-	print(response)
-	return response.json()["item"]["name"]
+	subprocess.run(["python", "autoChange.py", session["access_token"]])
+	return "Something broke!"
 
 @app.route("/refresh_token")
 def refresh_token():
