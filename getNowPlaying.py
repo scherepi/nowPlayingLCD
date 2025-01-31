@@ -91,10 +91,12 @@ def get_playing():
 		return redirect("/login")
 	
 	if (datetime.now().timestamp() > session['expires_at']):
+		print("token expired! trying to refresh...")
 		return redirect("/refresh_token")
 	
 	subprocess.run(["python", "autoChange.py", session["access_token"]])
-	return "Something broke!"
+	print("Something broke! Let's try that again...")
+	return redirect("/currently_playing")
 
 @app.route("/refresh_token")
 def refresh_token():

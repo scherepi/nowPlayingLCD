@@ -36,6 +36,8 @@ headers = {
     'Authorization': f"Bearer {AUTH_TOKEN}"
 }
 
+response = None
+
 while True:
 	try:
 		print("making request to api")
@@ -58,6 +60,7 @@ while True:
 			time.sleep(5)
 	except Exception as e:
 		print(f"Error: {e}")
+		print(response)
 		my_lcd.lcd_clear()
 		my_lcd.lcd_display_string("Oh my.", 1)
 		my_lcd.lcd_display_string("Something broke.", 2)
